@@ -2,9 +2,19 @@
 <configuration>
 
     <!-- ========================= -->
-    <!-- 로그 경로 -->
+    <!-- LOCAL (Batch) -->
     <!-- ========================= -->
-    <property name="LOG_PATH" value="D:/STOCK_PROJECT_V2/LOCAL_BATCH_LOGS"/>
+    <springProfile name="local">
+        <property name="LOG_PATH" value="D:/STOCK_PROJECT_V2/LOCAL_BATCH_LOGS"/>
+    </springProfile>
+
+    <!-- ========================= -->
+    <!-- DOCKER (Batch) -->
+    <!-- ========================= -->
+    <springProfile name="docker">
+        <property name="LOG_PATH" value="/logs"/>
+    </springProfile>
+
     <property name="LOG_FILE" value="${LOG_PATH}/batch.log"/>
 
     <!-- ========================= -->
@@ -19,7 +29,7 @@
     </appender>
 
     <!-- ========================= -->
-    <!-- 파일 로그 (일자별 롤링) -->
+    <!-- 파일 로그 -->
     <!-- ========================= -->
     <appender name="FILE"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
