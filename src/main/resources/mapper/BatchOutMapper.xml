@@ -37,7 +37,7 @@
         OR (schedule_gb = 'M'
         AND job_day = #{todayDay})
 
-        -- 🔥 연 배치
+        -- 연 배치
         OR (schedule_gb = 'Y'
         AND job_month = #{todayMonth}
         AND job_day   = #{todayDay})

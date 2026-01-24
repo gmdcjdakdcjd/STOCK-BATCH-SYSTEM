@@ -58,8 +58,8 @@ public class BatchOutService {
     }
 
     /**
-     * 실제 실행 ❌
-     * 실행 요청만 생성 ⭕
+     * 실제 실행 X
+     * 실행 요청만 생성 O
      */
     private void createExecutionRequest(BatchOut job) {
 
