@@ -2,6 +2,7 @@ package com.stock.batch.service;
 
 import com.stock.batch.domain.BatchIn;
 import com.stock.batch.domain.BatchInHistory;
+import com.stock.batch.executor.BatchInJobExecutor;
 import com.stock.batch.executor.BatchInProcessor;
 import com.stock.batch.mapper.BatchInHistoryMapper;
 import com.stock.batch.mapper.BatchInMapper;
@@ -25,7 +26,8 @@ public class BatchInService {
 
     private final BatchInMapper batchInMapper;
     private final BatchInHistoryMapper historyMapper;
-    private final BatchInProcessor processor;
+//    private final BatchInProcessor processor;
+    private final BatchInJobExecutor batchInJobExecutor;
 
     // ===============================
     // 실행 대상 스캔 (BatchOut과 동일 패턴)
@@ -69,8 +71,15 @@ public class BatchInService {
         String execMessage = "NO_ERROR";
 
         try {
+//            BatchInProcessor.BatchResult result =
+//                    processor.executeBatch(today, job.getFilePattern());
+
             BatchInProcessor.BatchResult result =
-                    processor.executeBatch(today, job.getFilePattern());
+                    batchInJobExecutor.execute(
+                            job.getJobName(),
+                            today,
+                            job.getFilePattern()
+                    );
 
             // 이동 전용 Job은 파일 수로 판단하지 않는다
             if (job.getJobName().startsWith("FOLDER_MOVE")) {
