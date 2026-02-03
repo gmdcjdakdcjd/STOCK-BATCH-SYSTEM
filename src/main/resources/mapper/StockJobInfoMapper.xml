@@ -1,0 +1,20 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.stock.batch.mapper.StockJobInfoMapper">
+
+    <select id="selectByJobCode" parameterType="string"
+            resultType="com.stock.batch.domain.StockJobInfo">
+        SELECT
+            job_code,
+            handler_name,
+            job_name,
+            use_yn,
+            reg_dt
+        FROM stock_job_info
+        WHERE job_code = #{jobCode}
+          AND use_yn = 'Y'
+    </select>
+
+</mapper>

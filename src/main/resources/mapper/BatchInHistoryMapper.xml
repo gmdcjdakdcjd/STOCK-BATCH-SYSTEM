@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.stock.batch.mapper.BatchInHistoryMapper">
+
+    <insert id="insertBatchInHistory" parameterType="com.stock.batch.domain.BatchInHistory" useGeneratedKeys="true" keyProperty="histId">
+
+        INSERT INTO batch_in_h (
+        job_id,
+        job_name,
+        job_info,
+        exec_start_time,
+        exec_end_time,
+        exec_status,
+        exec_message,
+        exec_date,
+        duration_ms
+        ) VALUES (
+        #{jobId},
+        #{jobName},
+        #{jobInfo},
+        #{execStartTime},
+        #{execEndTime},
+        #{execStatus},
+        #{execMessage},
+        #{execDate},
+        #{durationMs}
+        )
+
+    </insert>
+
+</mapper>

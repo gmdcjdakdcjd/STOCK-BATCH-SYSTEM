@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.stock.batch.mapper.BatchOutMapper">
+
+    <select id="selectExecutableBatchOut"
+            resultType="com.stock.batch.domain.BatchOut">
+
+        SELECT
+        job_id          AS jobId,
+        job_name        AS jobName,
+        job_info        AS jobInfo,
+        schedule_gb     AS scheduleGb,
+        job_month       AS jobMonth,
+        job_day         AS jobDay,
+        job_week        AS jobWeek,
+        job_hour        AS jobHour,
+        job_min         AS jobMin,
+        act_gb          AS actGb,
+        last_exec_info  AS lastExecInfo,
+        next_exec_info  AS nextExecInfo,
+        shell_file_dir  AS shellFileDir,
+        is_active       AS isActive,
+        created_at      AS createdAt
+        FROM batch_out
+        WHERE is_active = 1
+        AND act_gb = 'N'
+        AND (
+        -- 일 배치
+        schedule_gb = 'D'
+
+        -- 주 배치
+        OR (schedule_gb = 'W'
+        AND job_week = #{todayWeek})
+
+        -- 월 배치
+        OR (schedule_gb = 'M'
+        AND job_day = #{todayDay})
+
+        -- 연 배치
+        OR (schedule_gb = 'Y'
+        AND job_month = #{todayMonth}
+        AND job_day   = #{todayDay})
+        )
+        AND job_hour = #{nowHour}
+        AND job_min  = #{nowMin}
+        ORDER BY job_id
+
+    </select>
+
+    <update id="updateExecutionStatus">
+        UPDATE batch_out
+        SET act_gb = #{actGb},
+        last_exec_info = #{lastExecInfo},
+        next_exec_info = #{nextExecInfo}
+        WHERE job_id = #{jobId}
+    </update>
+
+    <update id="resetAllActGb">
+        UPDATE batch_out
+        SET act_gb = 'N'
+    </update>
+
+    <update id="resetActGbByLastExecBeforeToday">
+        UPDATE batch_out
+        SET act_gb = 'N'
+        WHERE is_active = 1
+        AND (
+        last_exec_info IS NULL
+        OR last_exec_info != DATE_FORMAT(NOW(), '%Y-%m-%d')
+        )
+    </update>
+
+
+</mapper>
