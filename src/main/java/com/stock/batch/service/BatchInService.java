@@ -71,8 +71,7 @@ public class BatchInService {
         String execMessage = "NO_ERROR";
 
         try {
-//            BatchInProcessor.BatchResult result =
-//                    processor.executeBatch(today, job.getFilePattern());
+//            BatchInProcessor.BatchResult result = processor.executeBatch(today, job.getFilePattern());
 
             BatchInProcessor.BatchResult result =
                     batchInJobExecutor.execute(

@@ -63,13 +63,16 @@ public class BatchOutService {
      */
     private void createExecutionRequest(BatchOut job) {
 
-        // stock_job_waiting INSERT
+        // BatchOut 실행 요청을 Queue(stock_job_queue)에 등록
+        // 실제 배치 실행은 별도의 Worker에서 처리
+        // status = W (Waiting)
         StockJobQueue waiting = StockJobQueue.builder()
                 .jobCode(job.getShellFileDir())   // ex) KospiUpdate
                 .status("W")
                 .batchOutId(job.getJobId())
                 .build();
 
+        // StockJobQueue 객체를 DB에 INSERT하여 배치 실행 요청 등록
         stockJobWaitingMapper.insertWaiting(waiting);
 
         log.info(
@@ -79,6 +82,10 @@ public class BatchOutService {
         );
 
         // BatchOut 실행 상태 갱신 (Java Batch의 책임)
+        // BatchOut 실행 상태 갱신
+        // act_gb = 'Y' : 오늘 실행 처리됨
+        // last_exec_info : 마지막 실행 날짜
+        // next_exec_info : 다음 실행 예정 날짜 계산
         job.setActGb("Y");
         job.setLastExecInfo(LocalDate.now().toString());
         job.setNextExecInfo(
@@ -87,6 +94,7 @@ public class BatchOutService {
                         .toString()
         );
 
+        // 실행 처리된 BatchOut의 상태 및 다음 실행 예정일 DB 업데이트
         batchOutMapper.updateExecutionStatus(job);
 
         log.debug(

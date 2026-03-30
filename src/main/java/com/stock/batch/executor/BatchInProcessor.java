@@ -52,10 +52,7 @@ public class BatchInProcessor {
             return List.of();
         }
 
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(
-                folder,
-                p -> p.getFileName().toString().startsWith(pattern)
-        )) {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream( folder, p -> p.getFileName().toString().startsWith(pattern) )) {
             List<Path> files = new ArrayList<>();
             stream.forEach(files::add);
             return files;
@@ -68,9 +65,7 @@ public class BatchInProcessor {
     private String resolveTableName(String fileName) {
 
         // 확장자 제거
-        String base = fileName.contains(".")
-                ? fileName.substring(0, fileName.lastIndexOf("."))
-                : fileName;
+        String base = fileName.contains(".") ? fileName.substring(0, fileName.lastIndexOf(".")) : fileName;
 
         base = base.toLowerCase();
 
@@ -159,8 +154,7 @@ public class BatchInProcessor {
     private void processTxt(Path filePath, String tableName) throws Exception {
 
         try (
-                BufferedReader reader =
-                        Files.newBufferedReader(filePath, StandardCharsets.UTF_8);
+                BufferedReader reader = Files.newBufferedReader(filePath, StandardCharsets.UTF_8);
                 CSVParser parser =
                         CSVFormat.DEFAULT
                                 .withDelimiter('|')
@@ -229,18 +223,12 @@ public class BatchInProcessor {
             // 여기서 정책 결정
             if (hasRowError) {
                 conn.rollback();   // ← DB 반영 안함
-                throw new RuntimeException(
-                        "[BatchIn] row error exists (column mismatch)"
-                );
+                throw new RuntimeException( "[BatchIn] row error exists (column mismatch)");
             }
 
             conn.commit();          // ← row 에러 없을 때만 반영
 
-            log.info(
-                    "[BatchIn] file insert completed: table={}, rows={}",
-                    tableName,
-                    count
-            );
+            log.info( "[BatchIn] file insert completed: table={}, rows={}", tableName, count);
         }
     }
 
@@ -248,13 +236,7 @@ public class BatchInProcessor {
     // =================================================
     // 7) 컬럼 타입 판단 (테이블별 룰 포함)
     // =================================================
-    private void setPreparedValue(
-            PreparedStatement ps,
-            int idx,
-            String tableName,
-            String header,
-            String raw
-    ) throws Exception {
+    private void setPreparedValue(PreparedStatement ps, int idx, String tableName, String header, String raw ) throws Exception {
 
         if (raw == null) {
             ps.setObject(idx, null);
@@ -263,12 +245,7 @@ public class BatchInProcessor {
 
         String cleaned = raw.trim();
 
-        if (
-                cleaned.isEmpty()
-                        || cleaned.equalsIgnoreCase("none")
-                        || cleaned.equalsIgnoreCase("null")
-                        || cleaned.equalsIgnoreCase("nan")
-        ) {
+        if ( cleaned.isEmpty() || cleaned.equalsIgnoreCase("none") || cleaned.equalsIgnoreCase("null") || cleaned.equalsIgnoreCase("nan") ) {
             ps.setObject(idx, null);
             return;
         }
@@ -363,20 +340,13 @@ public class BatchInProcessor {
                 // 2. DB 처리 (BATCH_IN 기준)
                 processFile(batchInFile);
 
-                log.info(
-                        "[BatchIn] NO_ERROR file={}",
-                        batchInFile.getFileName()
-                );
+                log.info("[BatchIn] NO_ERROR file={}", batchInFile.getFileName());
 
             } catch (Exception e) {
 
                 ok = false;
 
-                log.error(
-                        "[BatchIn] FILE_ERROR file={}",
-                        batchInFile.getFileName(),
-                        e
-                );
+                log.error( "[BatchIn] FILE_ERROR file={}", batchInFile.getFileName(), e);
             }
 
             // 3. 결과에 따라 BATCH_IN → ARCHIVE / ERROR (MOVE)
