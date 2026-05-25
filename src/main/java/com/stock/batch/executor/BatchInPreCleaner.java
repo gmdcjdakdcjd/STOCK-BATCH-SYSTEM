@@ -35,6 +35,17 @@ public class BatchInPreCleaner {
         }
 
         // =========================
+        // TIGER (SUMMARY에서만)
+        // =========================
+        if (jobName.equals("TIGER_ETF_SUMMARY_IN")) {
+            truncate(
+                    "tiger_etf_summary",
+                    "tiger_etf_holdings"
+            );
+            return;
+        }
+
+        // =========================
         // NPS (HEADER에서만)
         // =========================
         if (jobName.equals("NPS_PORTFOLIO_HEADER_IN")) {

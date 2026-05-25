@@ -260,7 +260,7 @@ public class BatchInProcessor {
         }
 
         // 코드 계열은 문자열 고정
-        if (col.equals("code") || col.equals("stock_code")) {
+        if (col.equals("code") || col.equals("stock_code") || col.equals("etf_id")) {
             ps.setString(idx, cleaned);
             return;
         }
