@@ -11,9 +11,13 @@ build/
 # ==============================
 # Spring Config (IMPORTANT)
 # ==============================
-application.properties
-application-*.properties
-!application-example.properties
+src/main/resources/application.properties
+src/main/resources/application-local.properties
+src/main/resources/application-secret.properties
+src/main/resources/application-prod.properties
+
+!src/main/resources/application-example.properties
+!src/main/resources/application-docker.properties
 
 # ==============================
 # Environment variables
