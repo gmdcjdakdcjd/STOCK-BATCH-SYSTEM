@@ -59,8 +59,9 @@ dependencies {
 	// =========================
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
-	testCompileOnly 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 
 	// =========================
